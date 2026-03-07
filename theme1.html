@@ -2,21 +2,78 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>기억 - 권준의 세계</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세계 - 권준의 세계</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #fafafa; }
-        .content { text-align: center; max-width: 600px; }
-        h1 { color: #5a5a5a; font-size: 3rem; }
-        p { line-height: 1.6; color: #666; }
-        .back-btn { margin-top: 40px; display: inline-block; padding: 10px 20px; border: 1px solid #333; text-decoration: none; color: #333; transition: 0.3s; }
-        .back-btn:hover { background: #333; color: #fff; }
+        /* (기존과 동일한 CSS 스타일) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background-color: #fafafa; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .header { width: 100%; padding: 8vh 0 4vh 0; text-align: center; }
+        .page-title { font-family: 'Noto Serif KR', serif; font-size: 3rem; color: #2E8B57; margin: 0 0 10px 0; }
+        .page-subtitle { font-size: 1.1rem; color: #777; font-weight: 300; letter-spacing: 1px; }
+        .memo-container { width: 90%; max-width: 700px; margin-bottom: 80px; border-top: 2px solid #333; }
+        .memo-item { border-bottom: 1px solid #ddd; overflow: hidden; }
+        .memo-title { font-family: 'Noto Serif KR', serif; font-size: 1.3rem; font-weight: 700; padding: 25px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background-color: transparent; transition: background-color 0.3s ease, color 0.3s ease; }
+        .memo-title:hover { background-color: rgba(46, 139, 87, 0.05); color: #2E8B57; }
+        .toggle-icon { font-size: 1.5rem; font-weight: 300; font-family: 'Noto Sans KR', sans-serif; transition: transform 0.4s ease; color: #999; }
+        .memo-content { max-height: 0; opacity: 0; padding: 0 15px; background-color: #fff; color: #555; font-size: 1.05rem; line-height: 1.8; word-break: keep-all; transition: all 0.5s ease-in-out; }
+        .memo-item.active .memo-content { max-height: 2000px; opacity: 1; padding: 20px 15px 40px 15px; }
+        .memo-item.active .memo-title { color: #2E8B57; }
+        .memo-item.active .toggle-icon { transform: rotate(45deg); color: #2E8B57; }
+        .back-btn { margin: 0 0 60px 0; padding: 12px 30px; font-size: 1rem; color: #333; text-decoration: none; border: 1px solid #ccc; border-radius: 50px; transition: all 0.3s ease; }
+        .back-btn:hover { background-color: #333; color: #fff; border-color: #333; }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>기억</h1>
-        <p>머릿속에 파편화되어 흩어진 기억들을 하나로 모아 시각화한 작품들이 전시되어 있습니다. 잊혀진 것들은 정말로 사라진 것일까요?</p>
-        <a href="next_page.html" class="back-btn">메인으로 돌아가기</a>
+
+    <div class="header">
+        <h1 class="page-title">세계</h1>
+        <div class="page-subtitle">내면의 벽면을 더듬어 기록한 파편들</div>
     </div>
+
+    <div class="memo-container" id="memoBox"></div>
+
+    <a href="next_page.html" class="back-btn">돌아가기</a>
+
+    <script src="memo_data.js"></script> 
+
+    <script>
+        // 👇 이 리스트에 제목을 순서대로 적으면, 화면에 그 순서대로 텍스트가 들어갑니다!
+        const targetTitles = [
+            "첫 번째 기록",
+            "두 번째 기록"
+        ];
+
+        // --------------------------------------------------
+        // 아래는 제목을 보고 memo_data.js에서 글을 찾아와서 그려주는 코드입니다.
+        const memoBox = document.getElementById('memoBox');
+
+        targetTitles.forEach(title => {
+            // 저장소에 해당 제목의 글이 있는지 확인
+            if (allMyTexts[title]) {
+                const content = allMyTexts[title];
+                const formattedContent = content.replace(/\n/g, '<br>'); // 엔터키 반영
+
+                const memoHTML = `
+                    <div class="memo-item">
+                        <div class="memo-title" onclick="toggleMemo(this)">
+                            ${title}
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="memo-content">
+                            <p>${formattedContent}</p>
+                        </div>
+                    </div>
+                `;
+                memoBox.innerHTML += memoHTML;
+            }
+        });
+
+        function toggleMemo(element) {
+            const memoItem = element.parentElement;
+            memoItem.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
