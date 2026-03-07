@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세계 검색 - 전시</title>
     <style>
-        /* 기본 여백 제거 및 폰트 설정 */
+        /* 웹 폰트 불러오기 (세리프: 바탕/명조계열, 고딕: 본고딕/산세리프계열) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap');
+
         body {
-            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
@@ -15,80 +16,78 @@
             overflow-x: hidden; /* 가로 스크롤 방지 */
         }
 
-        /* 넓고 시원한 전체 레이아웃 */
+        /* 전체 레이아웃 */
         .wrapper {
             display: flex;
-            justify-content: space-evenly; /* 양옆으로 넓게 배치 */
-            align-items: center;
+            justify-content: space-between; /* 양 끝으로 배치 */
+            align-items: flex-start; /* 모든 요소를 상단(위쪽)에 맞춤 */
             height: 100vh;
             width: 100vw;
-            padding: 0 5%;
+            padding: 60px 8% 0 8%; /* 상단에 60px 여백을 주어 글자를 위에 배치 */
             box-sizing: border-box;
         }
 
-        /* 왼쪽/오른쪽 텍스트 영역 (테두리 없음) */
+        /* 양쪽 텍스트 영역 공통 */
         .text-section {
             flex: 1;
-            max-width: 400px;
+            max-width: 300px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+        }
+
+        /* 왼쪽 '세계' 영역 (세리프체/녹색) */
+        .world-section {
+            font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
+            align-items: flex-start; /* 왼쪽 정렬 */
+        }
+
+        /* 오른쪽 '전시' 영역 (고딕체/머스타드) */
+        .exhibition-section {
+            font-family: 'Noto Sans KR', 'Pretendard', 'Malgun Gothic', sans-serif;
+            align-items: flex-end; /* 오른쪽 정렬로 대칭감 부여 */
+            text-align: right;
         }
 
         /* 메인 키워드 */
         .keyword {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 0 0 15px 0;
-            letter-spacing: -1px;
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 0 0 30px 0;
+            letter-spacing: -2px;
         }
 
         /* 컬러 설정 */
         .color-green { color: #2E8B57; }
         .color-mustard { color: #E1AD01; }
 
-        /* 연한 버전의 사전적 의미 (클릭 버튼 역할) */
-        .definition-trigger {
-            font-size: 1rem;
-            line-height: 1.6;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
+        /* 다국어 리스트 나열 */
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* 글자 사이 간격 */
+            font-size: 1.1rem;
+            opacity: 0.6; /* 약간 투명하게 처리하여 배경처럼 느껴지게 */
+            list-style: none;
+            padding: 0;
             margin: 0;
-            font-weight: 500;
-        }
-        /* 마우스 올렸을 때 상호작용 피드백 */
-        .definition-trigger:hover {
-            opacity: 0.7;
-        }
-        .light-green { color: rgba(46, 139, 87, 0.65); }
-        .light-mustard { color: rgba(225, 173, 1, 0.65); }
-
-        /* 토글되어 나타날 숨겨진 텍스트 */
-        .toggle-content {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #555;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            margin-top: 0;
-            transition: all 0.4s ease-in-out;
-        }
-        /* 텍스트가 열렸을 때의 상태 */
-        .toggle-content.show {
-            max-height: 200px;
-            opacity: 1;
-            margin-top: 20px;
         }
 
         /* 중앙 검색 영역 */
         .center-section {
-            flex: 1;
+            flex: 1.5;
             max-width: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 100vh; 
+            /* 화면 전체 높이를 기준으로 중앙을 잡은 뒤, 위로 끌어올림 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -65%); /* Y축을 -65%로 주어 중앙보다 약간 위로 배치 */
             padding: 0 40px;
+            box-sizing: border-box;
         }
 
         /* 테두리 없는 세련된 검색창 */
@@ -96,13 +95,14 @@
             display: flex;
             align-items: center;
             width: 100%;
-            background-color: #f5f5f5; /* 아주 연한 회색 배경 */
+            background-color: #f5f5f5;
             padding: 15px 25px;
             border-radius: 50px;
             transition: background-color 0.3s ease;
+            box-sizing: border-box;
         }
         .search-box:focus-within {
-            background-color: #eeeeee; /* 클릭 시 살짝 진해짐 */
+            background-color: #eeeeee;
         }
 
         /* 세련된 SVG 돋보기 아이콘 */
@@ -121,6 +121,7 @@
             width: 100%;
             letter-spacing: 1px;
             color: #333;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         .search-box input::placeholder {
             color: #bbb;
@@ -133,22 +134,29 @@
             color: #d93025;
             font-size: 0.95rem;
             font-weight: 500;
-            height: 20px; /* 공간 고정 */
+            height: 20px; 
             letter-spacing: 0.5px;
+            font-family: 'Noto Sans KR', sans-serif;
         }
     </style>
 </head>
 <body>
 
     <div class="wrapper">
-        <div class="text-section">
+        <div class="text-section world-section">
             <h1 class="keyword color-green">세계</h1>
-            <p class="definition-trigger light-green" onclick="toggleText('content-world')">
-                [사전적 의미] 지구상의 모든 나라. 또는 인류 사회 전체.
-            </p>
-            <div class="toggle-content" id="content-world">
-                이곳은 '세계'와 관련된 작가님의 구체적인 기획 의도나 전시 서문, 혹은 추가적인 설명이 들어갈 임시 텍스트 영역입니다. 나중에 원하시는 글로 수정해 주시면 됩니다.
-            </div>
+            <ul class="word-list color-green">
+                <li>World</li>
+                <li>世界</li>
+                <li>Monde</li>
+                <li>Mundo</li>
+                <li>Welt</li>
+                <li>Mondo</li>
+                <li>Мир</li>
+                <li>عالم</li>
+                <li>Dunia</li>
+                <li>Kósmos</li>
+            </ul>
         </div>
 
         <div class="center-section">
@@ -162,24 +170,24 @@
             <div class="error-message" id="errorMessage"></div>
         </div>
 
-        <div class="text-section">
+        <div class="text-section exhibition-section">
             <h1 class="keyword color-mustard">전시</h1>
-            <p class="definition-trigger light-mustard" onclick="toggleText('content-exhibition')">
-                [사전적 의미] 여러 가지 물품을 한곳에 벌여 놓고 일반에게 보임.
-            </p>
-            <div class="toggle-content" id="content-exhibition">
-                이곳은 '전시'와 관련된 관람 안내, 작품 소개, 혹은 숨겨진 메시지가 들어갈 수 있는 임시 텍스트 영역입니다. 텍스트 분량에 맞게 자연스럽게 펼쳐집니다.
-            </div>
+            <ul class="word-list color-mustard">
+                <li>Exhibition</li>
+                <li>展示</li>
+                <li>Exposition</li>
+                <li>Exposición</li>
+                <li>Ausstellung</li>
+                <li>Mostra</li>
+                <li>Выставка</li>
+                <li>معرض</li>
+                <li>Pameran</li>
+                <li>Sergi</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        // 텍스트 토글 기능
-        function toggleText(elementId) {
-            const content = document.getElementById(elementId);
-            content.classList.toggle('show');
-        }
-
         // 검색 실패 횟수 카운터
         let failCount = 0;
 
@@ -190,18 +198,18 @@
             }
         }
 
-        // 검색어 검증 및 페이지 이동 로직
+        // 검색어 검증 로직
         function checkSearch() {
             const inputValue = document.getElementById('searchInput').value.trim();
             const errorMsgElement = document.getElementById('errorMessage');
 
             if (inputValue === '권준') {
-                // 정답 입력 시 팝업 없이 다음 페이지로 즉시 이동
+                // 정답 시 다음 페이지로 즉시 이동
                 window.location.href = "next_page.html"; 
             } else {
                 failCount++;
                 
-                // 오답 횟수에 따른 힌트 제공
+                // 오답 메시지 힌트 노출
                 if (failCount === 1) {
                     errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■■뿐입니다.";
                 } else if (failCount === 2) {
