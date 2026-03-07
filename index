@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>세계 검색 - 전시</title>
+    <style>
+        body {
+            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            width: 900px;
+            position: relative;
+        }
+
+        /* 왼쪽, 오른쪽 텍스트 박스 공통 스타일 */
+        .text-area {
+            width: 300px;
+            height: 400px;
+            border: 2px solid #333;
+            background-color: #fff;
+            padding: 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        /* 글자 색상 포인트 */
+        .keyword {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .color-green { color: #2E8B57; } /* 녹색 */
+        .color-mustard { color: #E1AD01; } /* 머스타드색 */
+
+        /* 토글 메뉴 스타일 */
+        .toggle-btn {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #555;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            transition: color 0.2s ease;
+        }
+        .toggle-btn:hover {
+            color: #000;
+        }
+        .toggle-icon {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        .toggle-icon.open {
+            transform: rotate(90deg);
+        }
+
+        /* 사전적 정의 텍스트 */
+        .definition {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #444;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .definition.show {
+            max-height: 100px; /* 내용에 맞게 충분한 높이 지정 */
+            opacity: 1;
+            margin-bottom: 20px;
+        }
+
+        /* 중앙 검색창 영역 */
+        .center-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 0 20px;
+            margin-top: 150px; /* 검색창을 중간 높이쯤으로 내리기 위해 */
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 2px solid #333;
+            background-color: #fff;
+            padding: 5px 15px;
+            border-radius: 30px;
+            width: 100%;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .search-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            padding: 10px 0;
+            width: 100%;
+            background: transparent;
+        }
+
+        /* 검색 버튼 (엔터키와 동일한 역할) */
+        .search-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        /* 오류 메시지 */
+        .error-message {
+            margin-top: 15px;
+            color: #d93025;
+            font-size: 0.9rem;
+            font-weight: bold;
+            height: 20px; /* 고정 높이를 주어 레이아웃이 밀리지 않게 함 */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="text-area">
+            <div class="keyword color-green">세계</div>
+            <div class="toggle-btn" onclick="toggleDef('world')">
+                <span class="toggle-icon" id="icon-world">▷</span> 사전적 정의
+            </div>
+            <div class="definition" id="def-world">
+                지구상의 모든 나라. 또는 인류 사회 전체.<br>
+                (예: 세계 평화, 세계를 무대로 활약하다)
+            </div>
+        </div>
+
+        <div class="center-area">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="SEARCH" onkeypress="handleKeyPress(event)">
+                <button class="search-btn" onclick="checkSearch()">검색</button>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <div class="text-area">
+            <div class="keyword color-mustard">전시</div>
+            <div class="toggle-btn" onclick="toggleDef('exhibition')">
+                <span class="toggle-icon" id="icon-exhibition">▷</span> 사전적 정의
+            </div>
+            <div class="definition" id="def-exhibition">
+                여러 가지 물품을 한곳에 벌여 놓고 일반에게 보임.<br>
+                (예: 미술품 전시, 전시 공간)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 토글 인터랙션 함수
+        function toggleDef(type) {
+            const defElement = document.getElementById(`def-${type}`);
+            const iconElement = document.getElementById(`icon-${type}`);
+            
+            if (defElement.classList.contains('show')) {
+                defElement.classList.remove('show');
+                iconElement.classList.remove('open');
+            } else {
+                defElement.classList.add('show');
+                iconElement.classList.add('open');
+            }
+        }
+
+        // 검색 실패 횟수 카운터
+        let failCount = 0;
+
+        // 엔터키 입력 처리
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkSearch();
+            }
+        }
+
+        // 검색어 검증 로직
+        function checkSearch() {
+            const inputValue = document.getElementById('searchInput').value.trim();
+            const errorMsgElement = document.getElementById('errorMessage');
+
+            // 정답을 입력했을 때
+            if (inputValue === '권준') {
+                // 다음 페이지로 이동하는 코드. 현재는 알림창으로 대체합니다.
+                alert('정답입니다! 다음 페이지로 입장합니다.');
+                // 실제 이동을 원하시면 아래 주석을 풀고 링크를 수정하세요.
+                // window.location.href = "next_page.html"; 
+            } else {
+                // 오답일 때
+                failCount++;
+                
+                if (failCount === 1) {
+                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■■뿐입니다.";
+                } else if (failCount === 2) {
+                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■준뿐입니다.";
+                } else {
+                    // 3번 이상 틀렸을 때부터는 계속 이름 전체 공개
+                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 권준뿐입니다.";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
