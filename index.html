@@ -5,88 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세계 검색 - 전시</title>
     <style>
-        /* 웹 폰트 불러오기 (세리프: 바탕/명조계열, 고딕: 본고딕/산세리프계열) */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap');
+        /* 웹 폰트 불러오기 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@700;900&display=swap');
 
         body {
             margin: 0;
             padding: 0;
             background-color: #ffffff;
             color: #333;
-            overflow-x: hidden; /* 가로 스크롤 방지 */
+            overflow: hidden; /* 화면 스크롤 방지 */
         }
 
         /* 전체 레이아웃 */
         .wrapper {
             display: flex;
             justify-content: space-between; /* 양 끝으로 배치 */
-            align-items: flex-start; /* 모든 요소를 상단(위쪽)에 맞춤 */
+            align-items: stretch; 
             height: 100vh;
             width: 100vw;
-            padding: 60px 8% 0 8%; /* 상단에 60px 여백을 주어 글자를 위에 배치 */
+            padding: 2vh 4vw; /* 위아래, 양옆 여백을 약간만 주어 꽉 찬 느낌 강조 */
             box-sizing: border-box;
+            position: relative; /* 중앙 검색창의 절대 위치 기준 */
         }
 
         /* 양쪽 텍스트 영역 공통 */
         .text-section {
-            flex: 1;
-            max-width: 300px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between; /* 위에서 아래까지 동일한 간격으로 분배 */
+            height: 100%;
+            z-index: 1; /* 배경처럼 깔리도록 z-index 낮춤 */
         }
 
-        /* 왼쪽 '세계' 영역 (세리프체/녹색) */
+        /* 왼쪽 '세계' 영역 (세리프체) */
         .world-section {
             font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
             align-items: flex-start; /* 왼쪽 정렬 */
+            text-align: left;
         }
 
-        /* 오른쪽 '전시' 영역 (고딕체/머스타드) */
+        /* 오른쪽 '전시' 영역 (고딕체) */
         .exhibition-section {
             font-family: 'Noto Sans KR', 'Pretendard', 'Malgun Gothic', sans-serif;
-            align-items: flex-end; /* 오른쪽 정렬로 대칭감 부여 */
+            align-items: flex-end; /* 오른쪽 정렬 */
             text-align: right;
         }
 
-        /* 메인 키워드 */
-        .keyword {
-            font-size: 4rem;
-            font-weight: 700;
-            margin: 0 0 30px 0;
-            letter-spacing: -2px;
+        /* 개별 단어 스타일 (굵고 큼직하게 동일한 크기 적용) */
+        .word-item {
+            font-size: clamp(2rem, 4.5vh, 4rem); /* 화면 높이에 맞춰 글자 크기 자동 조절 */
+            font-weight: 900; /* 가장 굵은 두께 */
+            text-transform: uppercase; /* 영문 대문자 통일 */
+            margin: 0;
+            line-height: 1; /* 위아래 여백 최소화 */
+            letter-spacing: -1px;
         }
 
         /* 컬러 설정 */
         .color-green { color: #2E8B57; }
         .color-mustard { color: #E1AD01; }
 
-        /* 다국어 리스트 나열 */
-        .word-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; /* 글자 사이 간격 */
-            font-size: 1.1rem;
-            opacity: 0.6; /* 약간 투명하게 처리하여 배경처럼 느껴지게 */
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
         /* 중앙 검색 영역 */
         .center-section {
-            flex: 1.5;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -65%); /* 중앙에서 살짝 위로 */
+            width: 100%;
             max-width: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh; 
-            /* 화면 전체 높이를 기준으로 중앙을 잡은 뒤, 위로 끌어올림 */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -65%); /* Y축을 -65%로 주어 중앙보다 약간 위로 배치 */
-            padding: 0 40px;
+            z-index: 10; /* 양옆 글씨보다 앞으로 오도록 z-index 높임 */
+            padding: 0 20px;
             box-sizing: border-box;
         }
 
@@ -95,14 +86,16 @@
             display: flex;
             align-items: center;
             width: 100%;
-            background-color: #f5f5f5;
+            background-color: rgba(245, 245, 245, 0.95); /* 뒷배경 글씨가 살짝 비치지 않게 불투명도 조절 */
             padding: 15px 25px;
             border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 배경 글씨와 분리감을 위해 미세한 그림자 추가 */
             transition: background-color 0.3s ease;
             box-sizing: border-box;
         }
         .search-box:focus-within {
-            background-color: #eeeeee;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
         /* 세련된 SVG 돋보기 아이콘 */
@@ -122,10 +115,11 @@
             letter-spacing: 1px;
             color: #333;
             font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700;
         }
         .search-box input::placeholder {
             color: #bbb;
-            font-weight: 300;
+            font-weight: 500;
         }
 
         /* 오류 메시지 */
@@ -133,10 +127,11 @@
             margin-top: 20px;
             color: #d93025;
             font-size: 0.95rem;
-            font-weight: 500;
+            font-weight: 700;
             height: 20px; 
             letter-spacing: 0.5px;
             font-family: 'Noto Sans KR', sans-serif;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* 뒷 배경 글씨와 겹칠 때를 대비한 가독성 확보 */
         }
     </style>
 </head>
@@ -144,19 +139,16 @@
 
     <div class="wrapper">
         <div class="text-section world-section">
-            <h1 class="keyword color-green">세계</h1>
-            <ul class="word-list color-green">
-                <li>World</li>
-                <li>世界</li>
-                <li>Monde</li>
-                <li>Mundo</li>
-                <li>Welt</li>
-                <li>Mondo</li>
-                <li>Мир</li>
-                <li>عالم</li>
-                <li>Dunia</li>
-                <li>Kósmos</li>
-            </ul>
+            <div class="word-item color-green">세계</div>
+            <div class="word-item color-green">World</div>
+            <div class="word-item color-green">世界</div>
+            <div class="word-item color-green">Monde</div>
+            <div class="word-item color-green">Mundo</div>
+            <div class="word-item color-green">Welt</div>
+            <div class="word-item color-green">Mondo</div>
+            <div class="word-item color-green">Мир</div>
+            <div class="word-item color-green">عالم</div>
+            <div class="word-item color-green">Dunia</div>
         </div>
 
         <div class="center-section">
@@ -171,19 +163,16 @@
         </div>
 
         <div class="text-section exhibition-section">
-            <h1 class="keyword color-mustard">전시</h1>
-            <ul class="word-list color-mustard">
-                <li>Exhibition</li>
-                <li>展示</li>
-                <li>Exposition</li>
-                <li>Exposición</li>
-                <li>Ausstellung</li>
-                <li>Mostra</li>
-                <li>Выставка</li>
-                <li>معرض</li>
-                <li>Pameran</li>
-                <li>Sergi</li>
-            </ul>
+            <div class="word-item color-mustard">전시</div>
+            <div class="word-item color-mustard">Exhibition</div>
+            <div class="word-item color-mustard">展示</div>
+            <div class="word-item color-mustard">Exposition</div>
+            <div class="word-item color-mustard">Exposición</div>
+            <div class="word-item color-mustard">Ausstellung</div>
+            <div class="word-item color-mustard">Mostra</div>
+            <div class="word-item color-mustard">Выставка</div>
+            <div class="word-item color-mustard">معرض</div>
+            <div class="word-item color-mustard">Pameran</div>
         </div>
     </div>
 
