@@ -13,23 +13,22 @@
             padding: 0;
             background-color: #ffffff;
             color: #222;
-            min-height: 100vh; /* 화면 높이에 맞추되 내용이 길면 늘어남 */
+            min-height: 100vh; 
             display: flex;
             box-sizing: border-box;
-            /* overflow: hidden; 삭제 (모바일 스크롤을 위해) */
-            overflow-x: hidden; /* 가로 스크롤만 방지 */
+            overflow-x: hidden; 
         }
 
         /* ---------------------------------
-           [PC 버전 레이아웃 (기본)]
+           [PC 버전 레이아웃 (가로형)]
         --------------------------------- */
-        /* 왼쪽 영역: 가로형 이미지 하단 밀착 */
         .left-section {
             flex: 1.2; 
             display: flex;
             align-items: flex-end; 
             justify-content: flex-start; 
             padding: 0 0 50px 50px; 
+            box-sizing: border-box;
         }
 
         .landscape-img {
@@ -38,15 +37,16 @@
             height: auto; 
             border-radius: 4px;
             box-shadow: 3px 3px 15px rgba(0,0,0,0.08); 
+            display: block;
         }
 
-        /* 오른쪽 영역: 텍스트 낭독하듯 부드럽게 배치 */
         .right-section {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             padding: 50px 8vw 50px 40px;
+            box-sizing: border-box;
         }
 
         .intro-title {
@@ -86,44 +86,41 @@
         }
 
         /* ---------------------------------
-           [모바일 버전 레이아웃 (화면 너비 768px 이하)]
+           [모바일 버전 레이아웃 (세로형)]
         --------------------------------- */
         @media (max-width: 768px) {
             body {
-                flex-direction: column; /* 요소를 세로로 배치 (위에서 아래로) */
-                height: auto; /* 고정 높이 해제 */
+                flex-direction: column; /* 강제로 위에서 아래로 떨어지게 설정 */
+                display: block; 
             }
 
+            /* 1. 사진을 맨 위 상단에 여백 없이 꽉 차게 배치 */
             .left-section {
-                flex: none; /* 플렉스 비율 해제 */
-                padding: 40px 20px 10px 20px; /* 위쪽과 양옆 여백 조절 */
-                align-items: center; /* 이미지를 중앙으로 */
-                justify-content: center;
+                padding: 0; /* 여백을 완전히 제거 */
+                width: 100%;
+                display: block;
             }
 
             .landscape-img {
-                max-width: 100%; /* 모바일 화면에 꽉 차게 */
-                box-shadow: 2px 2px 10px rgba(0,0,0,0.05); /* 모바일용 가벼운 그림자 */
+                max-width: 100%; /* 모바일 가로폭에 100% 꽉 채움 */
+                border-radius: 0; /* 화면 끝에 닿으므로 모서리 둥글기 제거 */
+                box-shadow: none; /* 그림자 제거하여 깔끔하게 마감 */
             }
 
+            /* 2. 사진 바로 아래로 텍스트가 이어지도록 설정 */
             .right-section {
-                flex: none;
-                padding: 30px 25px 60px 25px; /* 텍스트 주변 여백 최적화 */
+                padding: 40px 25px 60px 25px; /* 텍스트가 답답하지 않도록 사진 아래 여백 넉넉히 부여 */
+                display: block;
             }
 
             .intro-title {
-                font-size: 1.8rem; /* 모바일에 맞게 폰트 크기 축소 */
-                margin-bottom: 30px;
-                text-align: center; /* 모바일에서는 제목을 가운데 정렬해 안정감 부여 */
+                font-size: 1.8rem; 
+                margin-bottom: 25px;
             }
 
             .intro-text {
-                font-size: 0.95rem; /* 텍스트 크기 미세 조정 */
+                font-size: 1rem; 
                 line-height: 1.8;
-            }
-            
-            .paragraph {
-                margin-bottom: 20px;
             }
         }
     </style>
