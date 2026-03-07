@@ -2,21 +2,187 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공간 - 권준의 세계</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전시 - 권준의 세계</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #fafafa; }
-        .content { text-align: center; max-width: 600px; }
-        h1 { color: #2E8B57; font-size: 3rem; } /* 녹색 포인트 */
-        p { line-height: 1.6; color: #666; }
-        .back-btn { margin-top: 40px; display: inline-block; padding: 10px 20px; border: 1px solid #333; text-decoration: none; color: #333; transition: 0.3s; }
-        .back-btn:hover { background: #333; color: #fff; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa; /* 아주 연한 회색으로 갤러리 벽면 느낌 부여 */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 상단 타이틀 영역 */
+        .header {
+            width: 100%;
+            padding: 8vh 0 4vh 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 3rem;
+            color: #E1AD01; /* 전시 테마의 머스타드 색상 */
+            margin: 0 0 10px 0;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #777;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* 비대칭 갤러리 레이아웃 */
+        .gallery-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* 위쪽 정렬을 기본으로 하되 개별 여백으로 엇갈리게 만듦 */
+            gap: 6vw; /* 두 사진 사이의 간격 */
+            max-width: 1000px;
+            width: 90%;
+            margin-bottom: 80px;
+        }
+
+        /* 개별 SNS 카드 공통 스타일 */
+        .sns-card {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: inherit;
+            transition: transform 0.4s ease;
+        }
+
+        /* 마우스 오버 시 살짝 떠오르는 효과 */
+        .sns-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 인스타그램 카드 (왼쪽, 기본 위치) */
+        .card-insta {
+            margin-top: 0;
+        }
+
+        /* 블로그 카드 (오른쪽, 아래로 살짝 내려서 비대칭 연출) */
+        .card-blog {
+            margin-top: 120px; 
+        }
+
+        /* 이미지 컨테이너 (사진 크기 규격화 및 그림자) */
+        .img-box {
+            width: 100%;
+            aspect-ratio: 3 / 4; /* 세로가 살짝 더 긴 갤러리 비율 (필요시 1/1 등으로 수정 가능) */
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 4px 10px 25px rgba(0,0,0,0.06);
+            background-color: #fff;
+        }
+
+        /* 실제 캡처 이미지 */
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 비율이 달라도 박스에 꽉 차게 크롭 */
+            transition: transform 0.5s ease;
+        }
+
+        .sns-card:hover .img-box img {
+            transform: scale(1.05); /* 마우스 오버 시 사진만 살짝 확대 */
+        }
+
+        /* 사진 아래 텍스트 영역 */
+        .text-box {
+            padding: 20px 10px;
+        }
+
+        .sns-type {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 제목 앞의 작은 컬러 점 */
+        .sns-type::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #E1AD01;
+            border-radius: 50%;
+        }
+
+        .sns-desc {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            margin: 0;
+            word-break: keep-all;
+        }
+
+        /* 메인으로 돌아가기 버튼 */
+        .back-btn {
+            margin: 0 0 60px 0;
+            padding: 12px 30px;
+            font-size: 1rem;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>공간</h1>
-        <p>물리적인 벽을 넘어, 마음이 머무는 자리를 탐구합니다. 채워진 것보다 비워진 여백이 들려주는 이야기에 귀 기울여 보세요.</p>
-        <a href="next_page.html" class="back-btn">메인으로 돌아가기</a>
+
+    <div class="header">
+        <h1 class="page-title">전시</h1>
+        <div class="page-subtitle">나를 세상에 내어보이는 두 개의 창구</div>
     </div>
+
+    <div class="gallery-container">
+        
+        <a href="https://instagram.com/your_id" target="_blank" class="sns-card card-insta">
+            <div class="img-box">
+                <img src="your_insta_capture.jpg" alt="인스타그램 캡처">
+            </div>
+            <div class="text-box">
+                <h2 class="sns-type">Instagram</h2>
+                <p class="sns-desc">찰나의 순간과 시각적인 영감들이 조각조각 모여있는 공간입니다. 직관적인 충돌을 기록합니다.</p>
+            </div>
+        </a>
+
+        <a href="https://blog.naver.com/your_id" target="_blank" class="sns-card card-blog">
+            <div class="img-box">
+                <img src="your_blog_capture.jpg" alt="블로그 캡처">
+            </div>
+            <div class="text-box">
+                <h2 class="sns-type">Blog</h2>
+                <p class="sns-desc">미세한 홈을 더듬어 발견한 생각들을 정돈된 텍스트로 풀어내는 곳입니다. 나의 내면을 다시 관측하는 과정을 담습니다.</p>
+            </div>
+        </a>
+
+    </div>
+
+    <a href="https://m.blog.naver.com/rnjswns1347" class="back-btn">돌아가기</a>
+
 </body>
 </html>
