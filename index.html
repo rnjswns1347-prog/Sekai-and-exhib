@@ -190,18 +190,18 @@
             }
         }
 
-        // 검색어 검증 로직
+        // 검색어 검증 및 페이지 이동 로직
         function checkSearch() {
             const inputValue = document.getElementById('searchInput').value.trim();
             const errorMsgElement = document.getElementById('errorMessage');
 
             if (inputValue === '권준') {
-                // 팝업 없이 바로 다음 페이지로 이동합니다.
-                // 주의: 동일한 폴더에 'next_page.html' 파일이 미리 만들어져 있어야 합니다.
+                // 정답 입력 시 팝업 없이 다음 페이지로 즉시 이동
                 window.location.href = "next_page.html"; 
             } else {
                 failCount++;
                 
+                // 오답 횟수에 따른 힌트 제공
                 if (failCount === 1) {
                     errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■■뿐입니다.";
                 } else if (failCount === 2) {
