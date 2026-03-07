@@ -2,21 +2,190 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>시간 - 권준의 세계</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모든 일 - 권준의 세계</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #fafafa; }
-        .content { text-align: center; max-width: 600px; }
-        h1 { color: #E1AD01; font-size: 3rem; } /* 머스타드 포인트 */
-        p { line-height: 1.6; color: #666; }
-        .back-btn { margin-top: 40px; display: inline-block; padding: 10px 20px; border: 1px solid #333; text-decoration: none; color: #333; transition: 0.3s; }
-        .back-btn:hover { background: #333; color: #fff; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 상단 타이틀 영역 */
+        .header {
+            width: 100%;
+            padding: 8vh 0 4vh 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 3rem;
+            color: #2c2c2c; /* 모든 일 테마는 차분하고 묵직한 차콜 그레이 */
+            margin: 0 0 10px 0;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #777;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* 포트폴리오 그리드 레이아웃 */
+        .portfolio-grid {
+            display: grid;
+            /* 화면이 넓으면 여러 개, 좁아지면 자동으로 줄어드는 마법의 그리드 설정 */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px; /* 작품 사이의 간격 */
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 80px;
+        }
+
+        /* 개별 포트폴리오 카드 */
+        .portfolio-card {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-8px); /* 마우스 올리면 살짝 위로 떠오름 */
+        }
+
+        /* 이미지 담는 박스 */
+        .img-box {
+            width: 100%;
+            aspect-ratio: 4 / 3; /* 사진 비율 (가로가 약간 더 긴 직사각형) */
+            overflow: hidden;
+            background-color: #eaeaea; /* 사진 로딩 전 보여질 회색 배경 */
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 박스 비율에 맞게 꽉 채워 자르기 */
+            transition: transform 0.6s ease;
+        }
+
+        .portfolio-card:hover .img-box img {
+            transform: scale(1.05); /* 마우스 올리면 사진만 스르륵 확대 */
+        }
+
+        /* 작품 설명 텍스트 */
+        .text-box {
+            padding: 15px 5px 0 5px;
+        }
+
+        .work-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: #111;
+        }
+
+        .work-category {
+            font-size: 0.85rem;
+            color: #888;
+            letter-spacing: 1px;
+            text-transform: uppercase; /* 영문일 경우 대문자로 자동 변환 */
+        }
+
+        /* 메인으로 돌아가기 버튼 */
+        .back-btn {
+            margin: 0 0 60px 0;
+            padding: 12px 30px;
+            font-size: 1rem;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>시간</h1>
-        <p>과거, 현재, 미래가 일직선으로 흐르지 않고 뒤엉킨 상태를 표현했습니다. 한순간 멈춰버린 찰나의 시간들을 만나보세요.</p>
-        <a href="next_page.html" class="back-btn">메인으로 돌아가기</a>
+
+    <div class="header">
+        <h1 class="page-title">모든 일</h1>
+        <div class="page-subtitle">나를 제대로 아는 것에서 시작된 기록들</div>
     </div>
+
+    <div class="portfolio-grid" id="portfolioBox"></div>
+
+    <a href="next_page.html" class="back-btn">돌아가기</a>
+
+
+    <script>
+        const myWorks = [
+            // 첫 번째 작품
+            {
+                title: "작품 제목을 적어주세요",
+                category: "사진 / 2024",       // 장르나 연도 같은 짧은 분류
+                image: "work1.jpg"           // 준비하신 사진 파일 이름 (같은 폴더에 있어야 함)
+            },
+
+            // 두 번째 작품
+            {
+                title: "두 번째 작업물",
+                category: "설치미술 / 2023",
+                image: "work2.jpg"
+            },
+
+            // 세 번째 작품
+            {
+                title: "세 번째 기록",
+                category: "텍스트",
+                image: "work3.png"
+            },
+
+            // 네 번째 작품 (원하는 만큼 계속 추가 가능!)
+            {
+                title: "미완성된 스케치",
+                category: "드로잉",
+                image: "work4.jpg"
+            }
+        ];
+
+        // --------------------------------------------------
+        // 아래는 리스트를 가져와서 갤러리로 만들어주는 마법입니다.
+        const portfolioBox = document.getElementById('portfolioBox');
+
+        myWorks.forEach(work => {
+            const cardHTML = `
+                <div class="portfolio-card">
+                    <div class="img-box">
+                        <img src="${work.image}" alt="${work.title}" onerror="this.src='data:image/svg+xml;charset=utf8,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' fill=\\'%23ccc\\' viewBox=\\'0 0 24 24\\'%3E%3Cpath d=\\'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\\'/%3E%3C/svg%3E';"> 
+                        </div>
+                    <div class="text-box">
+                        <h2 class="work-title">${work.title}</h2>
+                        <div class="work-category">${work.category}</div>
+                    </div>
+                </div>
+            `;
+            portfolioBox.innerHTML += cardHTML;
+        });
+    </script>
 </body>
 </html>
