@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세계 검색 - 전시</title>
     <style>
-        /* 웹 폰트 불러오기 */
+        /* 웹 폰트 불러오기 및 시스템 폰트 설정 */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@700;900&display=swap');
+
+        /* 레트로 폰트 설정 */
+        @font-face {
+            font-family: 'WindowsSystem';
+            src: url('https://db.onlinewebfonts.com/t/2c2069b7f583f7a4dfd60e6e765a04a6.woff2') format('woff2'); /* Windows System Font */
+        }
 
         body {
             margin: 0;
@@ -51,7 +57,7 @@
             text-align: right;
         }
 
-        /* 개별 단어 스타일 (굵고 큼직하게 동일한 크기 적용) */
+        /* 개별 단어 스타일 */
         .word-item {
             font-size: clamp(2rem, 4.5vh, 4rem); /* 화면 높이에 맞춰 글자 크기 자동 조절 */
             font-weight: 900; /* 가장 굵은 두께 */
@@ -65,7 +71,7 @@
         .color-green { color: #2E8B57; }
         .color-mustard { color: #E1AD01; }
 
-        /* 중앙 검색 영역 */
+        /* 중앙 검색 영역 (레트로 윈도우 스타일) */
         .center-section {
             position: absolute;
             top: 50%;
@@ -81,57 +87,74 @@
             box-sizing: border-box;
         }
 
-        /* 테두리 없는 세련된 검색창 */
-        .search-box {
+        /* 레트로 검색창 컨테이너 */
+        .retro-window.search-area {
+            background-color: #c0c0c0; /* 레트로 회색 */
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff; /* 3D 입체 효과 */
+            padding: 5px;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             width: 100%;
-            background-color: rgba(245, 245, 245, 0.95); /* 뒷배경 글씨가 살짝 비치지 않게 불투명도 조절 */
-            padding: 15px 25px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 배경 글씨와 분리감을 위해 미세한 그림자 추가 */
-            transition: background-color 0.3s ease;
-            box-sizing: border-box;
         }
-        .search-box:focus-within {
+
+        /* 레트로 입력창 스타일 */
+        .retro-window input {
+            flex-grow: 1;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080; /* 레트로 오목 효과 */
             background-color: #ffffff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        /* 세련된 SVG 돋보기 아이콘 */
-        .search-icon {
-            width: 22px;
-            height: 22px;
-            color: #888;
-            margin-right: 15px;
-        }
-
-        .search-box input {
-            border: none;
-            background: transparent;
+            padding: 5px;
             font-size: 1.1rem;
             outline: none;
-            width: 100%;
-            letter-spacing: 1px;
             color: #333;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-weight: 700;
+            font-family: 'Courier New', Courier, monospace; /* 레트로 텍스트 폰트 */
+            box-sizing: border-box;
         }
-        .search-box input::placeholder {
+        .retro-window input::placeholder {
             color: #bbb;
-            font-weight: 500;
         }
 
-        /* 오류 메시지 */
-        .error-message {
+        /* 레트로 검색 버튼 스타일 */
+        .retro-window button {
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff; /* 3D 입체 효과 */
+            background-color: #c0c0c0;
+            color: #333;
+            font-family: 'WindowsSystem', sans-serif; /* 레트로 시스템 폰트 */
+            font-size: 1rem;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .retro-window button:active {
+            border-color: #808080 #ffffff #ffffff #808080; /* 눌렸을 때 효과 */
+        }
+
+        /* 레트로 오류 대화 상자 스타일 */
+        .error-message.MessageBox {
+            background-color: #c0c0c0; /* 레트로 회색 */
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff; /* 3D 입체 효과 */
+            padding: 10px;
             margin-top: 20px;
-            color: #d93025;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 레트로 오류 메시지 텍스트 */
+        .MessageBox .text {
+            color: #d93025; /* 오류 빨간색 */
             font-size: 0.95rem;
             font-weight: 700;
-            height: 20px; 
             letter-spacing: 0.5px;
-            font-family: 'Noto Sans KR', sans-serif;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* 뒷 배경 글씨와 겹칠 때를 대비한 가독성 확보 */
+            font-family: 'WindowsSystem', sans-serif; /* 레트로 시스템 폰트 */
+            margin: 0;
+            height: 20px;
         }
     </style>
 </head>
@@ -152,14 +175,13 @@
         </div>
 
         <div class="center-section">
-            <div class="search-box">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+            <div class="retro-window search-area">
                 <input type="text" id="searchInput" placeholder="SEARCH" onkeypress="handleKeyPress(event)">
+                <button onclick="checkSearch()">검색</button>
             </div>
-            <div class="error-message" id="errorMessage"></div>
+            <div class="error-message MessageBox" id="errorMessage" style="display: none;">
+                <p class="text"></p>
+            </div>
         </div>
 
         <div class="text-section exhibition-section">
@@ -190,7 +212,8 @@
         // 검색어 검증 로직
         function checkSearch() {
             const inputValue = document.getElementById('searchInput').value.trim();
-            const errorMsgElement = document.getElementById('errorMessage');
+            const errorMessageBox = document.getElementById('errorMessage');
+            const errorTextElement = errorMessageBox.querySelector('.text');
 
             if (inputValue === '권준') {
                 // 정답 시 다음 페이지로 즉시 이동
@@ -198,13 +221,15 @@
             } else {
                 failCount++;
                 
-                // 오답 메시지 힌트 노출
+                // 오답 메시지 힌트 노출 및 레트로 대화 상자 표시
+                errorMessageBox.style.display = 'block';
+
                 if (failCount === 1) {
-                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■■뿐입니다.";
+                    errorTextElement.innerText = "이 세계에서 검색할 수 있는것은 ■■뿐입니다.";
                 } else if (failCount === 2) {
-                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 ■준뿐입니다.";
+                    errorTextElement.innerText = "이 세계에서 검색할 수 있는것은 ■준뿐입니다.";
                 } else {
-                    errorMsgElement.innerText = "이 세계에서 검색할 수 있는것은 권준뿐입니다.";
+                    errorTextElement.innerText = "이 세계에서 검색할 수 있는것은 권준뿐입니다.";
                 }
             }
         }
