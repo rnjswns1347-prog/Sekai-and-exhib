@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세계 - 권준의 세계</title>
     <style>
-        /* (기존과 동일한 CSS 스타일) */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
 
         body { font-family: 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background-color: #fafafa; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
@@ -39,37 +38,30 @@
     <script src="memo_data.js"></script> 
 
     <script>
-        // 👇 이 리스트에 제목을 순서대로 적으면, 화면에 그 순서대로 텍스트가 들어갑니다!
-        const targetTitles = [
-            "첫 번째 기록",
-            "두 번째 기록"
-        ];
-
-        // --------------------------------------------------
-        // 아래는 제목을 보고 memo_data.js에서 글을 찾아와서 그려주는 코드입니다.
         const memoBox = document.getElementById('memoBox');
 
-        targetTitles.forEach(title => {
-            // 저장소에 해당 제목의 글이 있는지 확인
-            if (allMyTexts[title]) {
-                const content = allMyTexts[title];
-                const formattedContent = content.replace(/\n/g, '<br>'); // 엔터키 반영
+        // 🔥 여기가 핵심입니다! allMyTexts에 있는 모든 '제목(키)'을 알아서 가져와 반복합니다.
+        Object.keys(allMyTexts).forEach(title => {
+            
+            const content = allMyTexts[title];
+            const formattedContent = content.replace(/\n/g, '<br>'); // 엔터키 반영
 
-                const memoHTML = `
-                    <div class="memo-item">
-                        <div class="memo-title" onclick="toggleMemo(this)">
-                            ${title}
-                            <span class="toggle-icon">+</span>
-                        </div>
-                        <div class="memo-content">
-                            <p>${formattedContent}</p>
-                        </div>
+            const memoHTML = `
+                <div class="memo-item">
+                    <div class="memo-title" onclick="toggleMemo(this)">
+                        ${title}
+                        <span class="toggle-icon">+</span>
                     </div>
-                `;
-                memoBox.innerHTML += memoHTML;
-            }
+                    <div class="memo-content">
+                        <p>${formattedContent}</p>
+                    </div>
+                </div>
+            `;
+            memoBox.innerHTML += memoHTML; // 화면에 추가
+            
         });
 
+        // 토글(열림/닫힘) 기능
         function toggleMemo(element) {
             const memoItem = element.parentElement;
             memoItem.classList.toggle('active');
@@ -77,3 +69,4 @@
     </script>
 </body>
 </html>
+
