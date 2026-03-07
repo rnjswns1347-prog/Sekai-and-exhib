@@ -5,37 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>권준의 세계 - 메인 전시</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
         body {
-            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif; /* 전체적으로 문학적인 명조체 느낌 강조 */
             margin: 0;
             padding: 0;
             background-color: #ffffff;
-            color: #333;
+            color: #222;
             height: 100vh;
             display: flex;
             box-sizing: border-box;
-            overflow: hidden; /* 화면 넘어가는 것 방지 */
+            overflow: hidden; 
         }
 
-        /* 왼쪽 영역: 이미지를 왼쪽 하단에 딱 붙게 배치 */
+        /* 왼쪽 영역: 가로형 이미지 하단 밀착 */
         .left-section {
-            flex: 1.2; /* 가로 이미지 공간을 위해 비율을 조금 더 늘림 */
+            flex: 1.2; 
             display: flex;
-            align-items: flex-end; /* 맨 아래로 정렬 */
-            justify-content: flex-start; /* 맨 왼쪽으로 정렬 */
-            padding: 0 0 50px 50px; /* 아래와 왼쪽에만 50px 여백을 주어 하단 밀착감 강조 */
+            align-items: flex-end; 
+            justify-content: flex-start; 
+            padding: 0 0 50px 50px; 
         }
 
-        /* 가로형 이미지 스타일 설정 */
         .landscape-img {
-            width: 100%; /* 부모 영역에 맞게 꽉 채움 */
-            max-width: 650px; /* 최대 가로 크기 제한 (너무 커지는 것 방지) */
-            height: auto; /* 세로 비율 자동 맞춤 */
+            width: 100%; 
+            max-width: 650px; 
+            height: auto; 
             border-radius: 4px;
-            box-shadow: 3px 3px 15px rgba(0,0,0,0.08); /* 부드러운 그림자 */
+            box-shadow: 3px 3px 15px rgba(0,0,0,0.08); 
         }
 
-        /* 오른쪽 영역: 텍스트 중앙/약간 상단 배치로 균형 맞춤 */
+        /* 오른쪽 영역: 텍스트 낭독하듯 부드럽게 배치 */
         .right-section {
             flex: 1;
             display: flex;
@@ -45,17 +46,24 @@
         }
 
         .intro-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            line-height: 1.3;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            line-height: 1.4;
+            letter-spacing: -1px;
         }
 
         .intro-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-            font-weight: 400;
+            font-family: 'Noto Sans KR', sans-serif; /* 본문은 가독성을 위해 단정한 고딕체 */
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #444;
+            font-weight: 300;
+            word-break: keep-all; /* 단어 단위로 끊어지도록 설정 (가독성 향상) */
+        }
+
+        .paragraph {
+            margin-bottom: 25px; /* 문단 사이 여백 */
         }
 
         /* 밑줄 쳐진 링크 키워드 스타일 */
@@ -69,7 +77,7 @@
         }
 
         .keyword-link:hover {
-            color: #E1AD01; 
+            color: #E1AD01; /* 머스타드 색상 포인트 */
             border-bottom-color: #E1AD01;
             background-color: rgba(225, 173, 1, 0.1); 
         }
@@ -82,13 +90,18 @@
     </div>
 
     <div class="right-section">
-        <h1 class="intro-title">권준의 세계에<br>오신 것을 환영합니다.</h1>
-        <p class="intro-text">
-            이곳은 단어와 이미지 사이의 경계를 탐구하는 공간입니다.<br><br>
-            우리가 무심코 지나친 <a href="theme1.html" class="keyword-link">기억</a>의 조각들, 
-            비어있음으로 비로소 완성되는 <a href="theme2.html" class="keyword-link">공간</a>의 질감, 
-            그리고 일정한 방향으로 흐르지 않는 <a href="theme3.html" class="keyword-link">시간</a>의 궤적들을 천천히 따라가며 관람해 주시기 바랍니다.
-        </p>
+        <h1 class="intro-title">나는 세계야.</h1>
+        <div class="intro-text">
+            <p class="paragraph">
+                세계는 나다. 우리는 모두 인간에 갇힌 뇌잖아. 그 어떤 것도 이해할 수 없다. 하늘이 파랗고 사과가 빨갛다는 것조차도 우리의 약속된 관성이다. 완전한 고립계에서 우리가 할 수 있는 건 내부의 벽면을 손으로 쓸면서 암흑인 세상의 외곽선울 잡아가는 일이다. 그렇게 전에는 몰랐던 미세한 홈을 발견한다거나, 못 가린 마감 자국을 발견하는 일을 사랑한다. 그렇게 나의 <a href="theme1.html" class="keyword-link">세계</a>는 구체화되고, 더욱 온전한 ‘나’를 세상에 내어보일 수 있게 된다.
+            </p>
+            <p class="paragraph">
+                타인의 세계는 잘 꾸며진 전시장 같아서, 이따금씩 나에게로 충돌해온다. 나는 나의 <a href="theme2.html" class="keyword-link">전시</a>를 나답게 가꿀 필요가 있고 그럴수록 충돌은 기꺼워진다.
+            </p>
+            <p class="paragraph">
+                내 안의 나를 꺼내어 다시 재관측하는 일. 카메라를 세팅하고 모니터를 마련해 그 앞에 가부좌를 트는 일 모두가 아름답다. 사랑스럽다. 나는 영원한 나의 첫 손님이니까. <a href="theme3.html" class="keyword-link">모든 일</a>은 나를 제대로 아는 것에서 시작한다.
+            </p>
+        </div>
     </div>
 
 </body>
