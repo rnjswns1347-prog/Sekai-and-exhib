@@ -8,17 +8,21 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
 
         body {
-            font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif; /* 전체적으로 문학적인 명조체 느낌 강조 */
+            font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif; 
             margin: 0;
             padding: 0;
             background-color: #ffffff;
             color: #222;
-            height: 100vh;
+            min-height: 100vh; /* 화면 높이에 맞추되 내용이 길면 늘어남 */
             display: flex;
             box-sizing: border-box;
-            overflow: hidden; 
+            /* overflow: hidden; 삭제 (모바일 스크롤을 위해) */
+            overflow-x: hidden; /* 가로 스크롤만 방지 */
         }
 
+        /* ---------------------------------
+           [PC 버전 레이아웃 (기본)]
+        --------------------------------- */
         /* 왼쪽 영역: 가로형 이미지 하단 밀착 */
         .left-section {
             flex: 1.2; 
@@ -54,19 +58,18 @@
         }
 
         .intro-text {
-            font-family: 'Noto Sans KR', sans-serif; /* 본문은 가독성을 위해 단정한 고딕체 */
+            font-family: 'Noto Sans KR', sans-serif;
             font-size: 1.05rem;
             line-height: 1.9;
             color: #444;
             font-weight: 300;
-            word-break: keep-all; /* 단어 단위로 끊어지도록 설정 (가독성 향상) */
+            word-break: keep-all; 
         }
 
         .paragraph {
-            margin-bottom: 25px; /* 문단 사이 여백 */
+            margin-bottom: 25px; 
         }
 
-        /* 밑줄 쳐진 링크 키워드 스타일 */
         .keyword-link {
             color: #111;
             text-decoration: none;
@@ -77,23 +80,65 @@
         }
 
         .keyword-link:hover {
-            color: #E1AD01; /* 머스타드 색상 포인트 */
+            color: #E1AD01; 
             border-bottom-color: #E1AD01;
             background-color: rgba(225, 173, 1, 0.1); 
+        }
+
+        /* ---------------------------------
+           [모바일 버전 레이아웃 (화면 너비 768px 이하)]
+        --------------------------------- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* 요소를 세로로 배치 (위에서 아래로) */
+                height: auto; /* 고정 높이 해제 */
+            }
+
+            .left-section {
+                flex: none; /* 플렉스 비율 해제 */
+                padding: 40px 20px 10px 20px; /* 위쪽과 양옆 여백 조절 */
+                align-items: center; /* 이미지를 중앙으로 */
+                justify-content: center;
+            }
+
+            .landscape-img {
+                max-width: 100%; /* 모바일 화면에 꽉 차게 */
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.05); /* 모바일용 가벼운 그림자 */
+            }
+
+            .right-section {
+                flex: none;
+                padding: 30px 25px 60px 25px; /* 텍스트 주변 여백 최적화 */
+            }
+
+            .intro-title {
+                font-size: 1.8rem; /* 모바일에 맞게 폰트 크기 축소 */
+                margin-bottom: 30px;
+                text-align: center; /* 모바일에서는 제목을 가운데 정렬해 안정감 부여 */
+            }
+
+            .intro-text {
+                font-size: 0.95rem; /* 텍스트 크기 미세 조정 */
+                line-height: 1.8;
+            }
+            
+            .paragraph {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="left-section">
-        <img src="IMG_4711.jpeg" alt="메인 전시 이미지" class="landscape-img">
+        <img src="your_landscape_image.jpg" alt="메인 전시 이미지" class="landscape-img">
     </div>
 
     <div class="right-section">
         <h1 class="intro-title">나는 세계야.</h1>
         <div class="intro-text">
             <p class="paragraph">
-                세계는 나다. 우리는 모두 인간에 갇힌 뇌잖아. 그 어떤 것도 이해할 수 없다. 하늘이 파랗고 사과가 빨갛다는 것조차도 우리의 약속된 관성이다. 완전한 고립계에서 우리가 할 수 있는 건 내부의 벽면을 손으로 쓸면서 암흑인 세상의 외곽선을 잡아가는 일이다. 그렇게 전에는 몰랐던 미세한 홈을 발견한다거나, 못 가린 마감 자국을 발견하는 일을 사랑한다. 그렇게 나의 <a href="theme1.html" class="keyword-link">세계</a>는 구체화되고, 더욱 온전한 ‘나’를 세상에 내어보일 수 있게 된다.
+                세계는 나다. 우리는 모두 인간에 갇힌 뇌잖아. 그 어떤 것도 이해할 수 없다. 하늘이 파랗고 사과가 빨갛다는 것조차도 우리의 약속된 관성이다. 완전한 고립계에서 우리가 할 수 있는 건 내부의 벽면을 손으로 쓸면서 암흑인 세상의 외곽선울 잡아가는 일이다. 그렇게 전에는 몰랐던 미세한 홈을 발견한다거나, 못 가린 마감 자국을 발견하는 일을 사랑한다. 그렇게 나의 <a href="theme1.html" class="keyword-link">세계</a>는 구체화되고, 더욱 온전한 ‘나’를 세상에 내어보일 수 있게 된다.
             </p>
             <p class="paragraph">
                 타인의 세계는 잘 꾸며진 전시장 같아서, 이따금씩 나에게로 충돌해온다. 나는 나의 <a href="theme2.html" class="keyword-link">전시</a>를 나답게 가꿀 필요가 있고 그럴수록 충돌은 기꺼워진다.
