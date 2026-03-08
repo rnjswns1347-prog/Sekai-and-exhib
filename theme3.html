@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>모든 일 - 권준의 세계</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
 
@@ -19,39 +20,19 @@
             min-height: 100vh;
         }
 
-        /* 상단 타이틀 영역 */
-        .header {
-            width: 100%;
-            padding: 8vh 0 4vh 0;
-            text-align: center;
-        }
+        .header { width: 100%; padding: 8vh 0 4vh 0; text-align: center; }
+        .page-title { font-family: 'Noto Serif KR', serif; font-size: 3rem; color: #2c2c2c; margin: 0 0 10px 0; }
+        .page-subtitle { font-size: 1.1rem; color: #777; font-weight: 300; letter-spacing: 1px; }
 
-        .page-title {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 3rem;
-            color: #2c2c2c; /* 모든 일 테마는 차분하고 묵직한 차콜 그레이 */
-            margin: 0 0 10px 0;
-        }
-
-        .page-subtitle {
-            font-size: 1.1rem;
-            color: #777;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        /* 포트폴리오 그리드 레이아웃 */
         .portfolio-grid {
             display: grid;
-            /* 화면이 넓으면 여러 개, 좁아지면 자동으로 줄어드는 마법의 그리드 설정 */
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px; /* 작품 사이의 간격 */
+            gap: 40px;
             width: 90%;
             max-width: 1200px;
             margin-bottom: 80px;
         }
 
-        /* 개별 포트폴리오 카드 */
         .portfolio-card {
             display: flex;
             flex-direction: column;
@@ -61,68 +42,41 @@
             transition: transform 0.4s ease;
         }
 
-        .portfolio-card:hover {
-            transform: translateY(-8px); /* 마우스 올리면 살짝 위로 떠오름 */
-        }
+        .portfolio-card:hover { transform: translateY(-8px); }
 
-        /* 이미지 담는 박스 */
         .img-box {
             width: 100%;
-            aspect-ratio: 4 / 3; /* 사진 비율 (가로가 약간 더 긴 직사각형) */
+            aspect-ratio: 4 / 3;
             overflow: hidden;
-            background-color: #eaeaea; /* 사진 로딩 전 보여질 회색 배경 */
+            background-color: #eaeaea; 
             border-radius: 4px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .img-box img {
+        /* img 대신 canvas를 사용합니다 */
+        .img-box canvas {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 박스 비율에 맞게 꽉 채워 자르기 */
+            object-fit: cover; /* 캔버스에 그려진 PDF를 박스 비율에 맞춰 꽉 채움 */
             transition: transform 0.6s ease;
         }
 
-        .portfolio-card:hover .img-box img {
-            transform: scale(1.05); /* 마우스 올리면 사진만 스르륵 확대 */
+        .portfolio-card:hover .img-box canvas {
+            transform: scale(1.05);
         }
 
-        /* 작품 설명 텍스트 */
-        .text-box {
-            padding: 15px 5px 0 5px;
-        }
+        .text-box { padding: 15px 5px 0 5px; }
+        .work-title { font-family: 'Noto Serif KR', serif; font-size: 1.25rem; font-weight: 700; margin: 0 0 5px 0; color: #111; }
+        .work-category { font-size: 0.85rem; color: #888; letter-spacing: 1px; text-transform: uppercase; }
 
-        .work-title {
-            font-family: 'Noto Serif KR', serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            color: #111;
-        }
-
-        .work-category {
-            font-size: 0.85rem;
-            color: #888;
-            letter-spacing: 1px;
-            text-transform: uppercase; /* 영문일 경우 대문자로 자동 변환 */
-        }
-
-        /* 메인으로 돌아가기 버튼 */
-        .back-btn {
-            margin: 0 0 60px 0;
-            padding: 12px 30px;
-            font-size: 1rem;
-            color: #333;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background-color: #333;
-            color: #fff;
-            border-color: #333;
-        }
+        .back-btn { margin: 0 0 60px 0; padding: 12px 30px; font-size: 1rem; color: #333; text-decoration: none; border: 1px solid #ccc; border-radius: 50px; transition: all 0.3s ease; }
+        .back-btn:hover { background-color: #333; color: #fff; border-color: #333; }
+        
+        /* 로딩 중 표시 텍스트 */
+        .loading-text { font-size: 0.9rem; color: #999; position: absolute; }
     </style>
 </head>
 <body>
@@ -136,56 +90,87 @@
 
     <a href="next_page.html" class="back-btn">돌아가기</a>
 
-
     <script>
+        // PDF.js 워커(Worker) 경로 설정 (필수)
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // 👇 여기에 PDF 작업물 리스트를 적어주세요!
         const myWorks = [
-            // 첫 번째 작품
             {
-                title: "작품 제목을 적어주세요",
-                category: "사진 / 2024",       // 장르나 연도 같은 짧은 분류
-                image: "work1.jpg"           // 준비하신 사진 파일 이름 (같은 폴더에 있어야 함)
+                title: "탈피 프로젝트",
+                category: "[방황] / 2025",
+                pdfFile: "탈피.pdf" // 같은 폴더에 있는 PDF 파일 이름
             },
-
-            // 두 번째 작품
             {
-                title: "두 번째 작업물",
-                category: "설치미술 / 2023",
-                image: "work2.jpg"
-            },
-
-            // 세 번째 작품
-            {
-                title: "세 번째 기록",
-                category: "텍스트",
-                image: "work3.png"
-            },
-
-            // 네 번째 작품 (원하는 만큼 계속 추가 가능!)
-            {
-                title: "미완성된 스케치",
-                category: "드로잉",
-                image: "work4.jpg"
+                title: "Web Zine",
+                category: "[방황] / 2025",
+                pdfFile: "세다없.pdf"
             }
         ];
 
-        // --------------------------------------------------
-        // 아래는 리스트를 가져와서 갤러리로 만들어주는 마법입니다.
         const portfolioBox = document.getElementById('portfolioBox');
 
-        myWorks.forEach(work => {
+        // 1. 카드의 뼈대(HTML)를 먼저 화면에 그립니다.
+        myWorks.forEach((work, index) => {
+            const canvasId = `pdf-canvas-${index}`;
             const cardHTML = `
-                <div class="portfolio-card">
-                    <div class="img-box">
-                        <img src="${work.image}" alt="${work.title}" onerror="this.src='data:image/svg+xml;charset=utf8,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' fill=\\'%23ccc\\' viewBox=\\'0 0 24 24\\'%3E%3Cpath d=\\'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\\'/%3E%3C/svg%3E';"> 
-                        </div>
+                <a href="${work.pdfFile}" target="_blank" class="portfolio-card">
+                    <div class="img-box" style="position: relative;">
+                        <span class="loading-text" id="loading-${index}">로딩 중...</span>
+                        <canvas id="${canvasId}"></canvas>
+                    </div>
                     <div class="text-box">
                         <h2 class="work-title">${work.title}</h2>
                         <div class="work-category">${work.category}</div>
                     </div>
-                </div>
+                </a>
             `;
             portfolioBox.innerHTML += cardHTML;
         });
+
+        // 2. 각각의 캔버스에 PDF 1페이지를 그려넣는 함수
+        async function renderPDFThumbnail(pdfUrl, index) {
+            const canvasId = `pdf-canvas-${index}`;
+            const loadingText = document.getElementById(`loading-${index}`);
+            
+            try {
+                // PDF 파일 불러오기
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                const pdf = await loadingTask.promise;
+                
+                // 첫 번째 페이지(1) 가져오기
+                const page = await pdf.getPage(1);
+
+                const canvas = document.getElementById(canvasId);
+                const ctx = canvas.getContext('2d');
+
+                // 해상도를 높여서 깨끗하게 렌더링 (scale: 1.5)
+                const viewport = page.getViewport({ scale: 1.5 });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                // 도화지에 그림 그리기 완료될 때까지 대기
+                await page.render(renderContext).promise;
+                
+                // 그림이 다 그려지면 '로딩 중...' 글자 숨기기
+                loadingText.style.display = 'none';
+
+            } catch (error) {
+                console.error('PDF 로딩 오류:', error);
+                loadingText.innerText = "PDF를 불러올 수 없습니다.";
+            }
+        }
+
+        // 3. 리스트에 있는 모든 PDF 파일에 대해 렌더링 실행
+        myWorks.forEach((work, index) => {
+            renderPDFThumbnail(work.pdfFile, index);
+        });
+
     </script>
 </body>
 </html>
